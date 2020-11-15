@@ -1,15 +1,18 @@
-package com.master8.kino
+package com.master8.kino.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import androidx.lifecycle.lifecycleScope
-import com.master8.kino.data.repository.PortfolioRepositoryImpl
+import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.Text
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.setContent
+import androidx.ui.tooling.preview.Preview
 import com.master8.kino.data.source.tinkoff.createInvestApiService
 import com.master8.kino.domain.entity.Instrument
 import com.master8.kino.domain.entity.PortfolioPosition
-import com.master8.kino.domain.usecase.GetAllPortfolioPositions
-import kotlinx.coroutines.launch
+import com.master8.kino.ui.ui.キノTheme
 
 class MainActivity : AppCompatActivity() {
 
@@ -46,18 +49,30 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-//        lifecycleScope.launch {
-//            GetAllPortfolioPositions(
-//                PortfolioRepositoryImpl(service)
-//            ).invoke().forEach {
-//                Log.e("mv8", "result $it ${it.expectedYield} ${it.expectedYieldInPercent}")
-//            }
-//        }
+        setContent {
+            キノTheme {
+                // A surface container using the 'background' color from the theme
+                Surface(color = MaterialTheme.colors.background) {
+                    Greeting("Android")
+                }
+            }
+        }
 
         positions.forEach {
             Log.e("mv8", "result $it ${it.expectedYield} ${it.expectedYieldInPercent}")
         }
+    }
+}
+
+@Composable
+fun Greeting(name: String) {
+    Text(text = "Hello $name!")
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DefaultPreview() {
+    キノTheme {
+        Greeting("Android")
     }
 }

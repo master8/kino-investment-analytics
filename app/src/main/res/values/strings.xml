@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">キノ</string>
+    <string name="title_activity_main">My Compose App</string>
 </resources>
