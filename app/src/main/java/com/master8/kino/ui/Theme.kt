@@ -1,4 +1,4 @@
-package com.master8.kino.ui.ui
+package com.master8.kino.ui
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme

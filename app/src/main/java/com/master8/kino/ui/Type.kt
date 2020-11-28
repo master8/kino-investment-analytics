@@ -1,4 +1,4 @@
-package com.master8.kino.ui.ui
+package com.master8.kino.ui
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle

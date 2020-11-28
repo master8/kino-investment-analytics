@@ -12,7 +12,6 @@ import androidx.ui.tooling.preview.Preview
 import com.master8.kino.data.source.tinkoff.createInvestApiService
 import com.master8.kino.domain.entity.Instrument
 import com.master8.kino.domain.entity.PortfolioPosition
-import com.master8.kino.ui.ui.キノTheme
 
 class MainActivity : AppCompatActivity() {
 
