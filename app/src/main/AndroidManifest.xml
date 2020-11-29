@@ -13,7 +13,7 @@
         android:theme="@style/Theme.キノ">
         <activity
             android:name=".ui.MainActivity"
-            android:theme="@style/Theme.キノ.NoActionBar">
+            android:theme="@style/Theme.キノ">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
