@@ -1,15 +1,23 @@
 package com.master8.kino.ui
 
 import android.os.Bundle
+import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumnFor
 import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.setContent
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.master8.kino.R
 import com.master8.kino.data.source.tinkoff.createInvestApiService
 import com.master8.kino.domain.entity.Instrument
@@ -48,27 +56,40 @@ class MainActivity : AppCompatActivity() {
         )
     )
 
+    private val temp = MutableLiveData<List<PortfolioPosition>>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            Column(
-                modifier = Modifier.padding(16.dp)
-            ) {
-                Image(
-                    imageResource(R.drawable.im_fxit),
-                    modifier = Modifier
-                        .preferredSize(48.dp),
-                    contentScale = ContentScale.Crop
-                )
-                Spacer(modifier = Modifier.preferredHeight(16.dp))
+            PositionsScreen(livePositions = temp)
+        }
 
-                positions.forEach {
-                    val expectedYield = "%.2f".format(it.expectedYield)
-                    val expectedYieldInPercent = "%.2f".format(it.expectedYieldInPercent)
+        Handler().postDelayed({
+            temp.value = positions
+        }, 3000)
+    }
+}
 
-                    Text("${it.instrument.humanName} $$expectedYield $expectedYieldInPercent%")
-                }
-            }
+@Composable
+fun PositionsScreen(livePositions: LiveData<List<PortfolioPosition>>) {
+    val positions by livePositions.observeAsState(emptyList())
+
+    Column(
+        modifier = Modifier.padding(16.dp)
+    ) {
+        Image(
+            imageResource(R.drawable.im_fxit),
+            modifier = Modifier
+                .preferredSize(48.dp),
+            contentScale = ContentScale.Crop
+        )
+        Spacer(modifier = Modifier.preferredHeight(16.dp))
+
+        LazyColumnFor(items = positions) {
+            val expectedYield = remember { "%.2f".format(it.expectedYield) }
+            val expectedYieldInPercent = remember { "%.2f".format(it.expectedYieldInPercent) }
+
+            Text("${it.instrument.humanName} $$expectedYield $expectedYieldInPercent%")
         }
     }
 }
