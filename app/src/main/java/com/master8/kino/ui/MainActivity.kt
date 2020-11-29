@@ -1,10 +1,16 @@
 package com.master8.kino.ui
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.setContent
+import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.unit.dp
+import com.master8.kino.R
 import com.master8.kino.data.source.tinkoff.createInvestApiService
 import com.master8.kino.domain.entity.Instrument
 import com.master8.kino.domain.entity.PortfolioPosition
@@ -45,11 +51,24 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            Text("Hello world!")
-        }
+            Column(
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Image(
+                    imageResource(R.drawable.im_fxit),
+                    modifier = Modifier
+                        .preferredSize(48.dp),
+                    contentScale = ContentScale.Crop
+                )
+                Spacer(modifier = Modifier.preferredHeight(16.dp))
 
-        positions.forEach {
-            Log.e("mv8", "result $it ${it.expectedYield} ${it.expectedYieldInPercent}")
+                positions.forEach {
+                    val expectedYield = "%.2f".format(it.expectedYield)
+                    val expectedYieldInPercent = "%.2f".format(it.expectedYieldInPercent)
+
+                    Text("${it.instrument.humanName} $$expectedYield $expectedYieldInPercent%")
+                }
+            }
         }
     }
 }
