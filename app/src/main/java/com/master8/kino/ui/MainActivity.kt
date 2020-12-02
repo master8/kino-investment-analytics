@@ -13,7 +13,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.DrawStyle
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
@@ -180,6 +182,41 @@ fun PositionsScreen(livePositions: LiveData<List<PortfolioPosition>>) {
                 style = Stroke(
                     24.dp.toPx()
                 )
+            )
+        }
+
+        Spacer(modifier = Modifier.preferredHeight(16.dp))
+
+        Canvas(
+            modifier = Modifier
+                .preferredSize(200.dp)
+        ) {
+            drawLine(
+                Color(0xFFEBECED),
+                Offset(
+                    24.dp.toPx(),
+                    24.dp.toPx()
+                ),
+                Offset(
+                    124.dp.toPx(),
+                    24.dp.toPx()
+                ),
+                8.dp.toPx(),
+                StrokeCap.Round
+            )
+
+            drawLine(
+                Color(0xFF83D4C3),
+                Offset(
+                    24.dp.toPx(),
+                    24.dp.toPx()
+                ),
+                Offset(
+                    36.5.dp.toPx(),
+                    24.dp.toPx()
+                ),
+                8.dp.toPx(),
+                StrokeCap.Round
             )
         }
     }
