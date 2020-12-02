@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -67,12 +68,12 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            PositionsScreen(livePositions = temp)
+            PortfolioScreen()
         }
 
-        Handler().postDelayed({
-            temp.value = positions
-        }, 3000)
+//        Handler().postDelayed({
+//            temp.value = positions
+//        }, 3000)
     }
 }
 
@@ -81,7 +82,8 @@ fun PositionsScreen(livePositions: LiveData<List<PortfolioPosition>>) {
     val positions by livePositions.observeAsState(emptyList())
 
     Column(
-        modifier = Modifier.padding(16.dp)
+        modifier = Modifier.padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
 //        Image(
 //            imageResource(R.drawable.im_fxit),
@@ -102,7 +104,7 @@ fun PositionsScreen(livePositions: LiveData<List<PortfolioPosition>>) {
 
         Canvas(
             modifier = Modifier
-                .preferredSize(200.dp)
+                .preferredSize(240.dp)
         ) {
             drawArc(
                 Color(0xFF83D4C3),
@@ -189,7 +191,8 @@ fun PositionsScreen(livePositions: LiveData<List<PortfolioPosition>>) {
 
         Canvas(
             modifier = Modifier
-                .preferredSize(200.dp)
+                .preferredHeight(200.dp)
+                .fillMaxWidth()
         ) {
             drawLine(
                 Color(0xFFEBECED),
