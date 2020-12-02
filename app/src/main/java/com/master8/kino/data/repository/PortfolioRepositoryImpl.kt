@@ -27,7 +27,7 @@ class PortfolioRepositoryImpl(
         val totalPrice = operations.sumByDouble { it.price * it.quantityExecuted }
         val lots = operations.sumBy { it.quantityExecuted }
 
-        val nowPrice = getPriceForDateTime(
+        val priceNow = getPriceForDateTime(
             instrument,
             TARGET_DATE
         )
@@ -37,7 +37,7 @@ class PortfolioRepositoryImpl(
             TARGET_DATE
         )
 
-        val nowPriceInUsd = nowPrice / usd
+        val nowPriceInUsd = priceNow / usd
 
         return PortfolioPosition(
             instrument,

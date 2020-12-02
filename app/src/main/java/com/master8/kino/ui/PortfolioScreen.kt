@@ -5,6 +5,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -12,12 +13,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.master8.kino.domain.entity.Portfolio
+import com.master8.kino.domain.entity.PortfolioPart
 import java.util.*
 
 @Composable
-fun PortfolioScreen() {
+fun PortfolioScreen(portfolio: Portfolio) {
+    val totalPortfolioPrice = remember { portfolio.totalPriceNow }
+    val maxWeightPrice = remember {
+        portfolio.parts.maxOf { it.totalPriceNow / it.weight}
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -30,7 +39,7 @@ fun PortfolioScreen() {
             alignment = Alignment.Center
         ) {
             Text(
-                text = CURRENCY_FORMATTER.format(2360.87),
+                text = CURRENCY_FORMATTER.format(totalPortfolioPrice),
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Medium
             )
@@ -40,53 +49,84 @@ fun PortfolioScreen() {
                     .preferredSize(250.dp)
 
             ) {
-                drawArc(
-                    Color(0xFF83D4C3),
-                    0f,
-                    360f,
-                    false,
-                    style = Stroke(
-                        24.dp.toPx()
+                var startAngle = -90f
+                var sweepAngle: Float
+
+                portfolio.parts.forEach {
+
+                    sweepAngle = (360 * (it.totalPriceNow / totalPortfolioPrice)).toFloat()
+
+                    drawArc(
+                        it.color,
+                        startAngle + 1,
+                         sweepAngle - 2,
+                        false,
+                        style = Stroke(
+                            24.dp.toPx()
+                        )
                     )
-                )
+
+                    startAngle += sweepAngle
+                }
             }
         }
 
         Spacer(modifier = Modifier.preferredHeight(48.dp))
 
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "FinEx Gold",
-                fontSize = 12.sp,
-                color = Color(0xFF9299A2),
-                modifier = Modifier.weight(1f)
+        portfolio.parts.forEach {
+            PortfolioPartBlock(
+                it,
+                totalPortfolioPrice,
+                maxWeightPrice
             )
 
-            Text(
-                text = "2x",
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Medium,
-                color = Color(0xFF131D2C)
-            )
-
-            WeightBar()
-
-            Text(
-                text = PERCENT_FORMATTER.format(0.2636),
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Medium,
-                color = Color(0xFF131D2C)
-            )
+            Spacer(modifier = Modifier.preferredHeight(8.dp))
         }
-
-
     }
 }
 
 @Composable
-fun WeightBar() {
+fun PortfolioPartBlock(
+    part: PortfolioPart,
+    totalPortfolioPrice: Double,
+    maxWeightPrice: Double
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = part.name,
+            fontSize = 12.sp,
+            color = Color(0xFF9299A2),
+            modifier = Modifier.weight(1f)
+        )
+
+        Text(
+            text = "${part.weight}x",
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Medium,
+            color = Color(0xFF131D2C)
+        )
+
+        WeightBar(part, maxWeightPrice)
+
+        Text(
+            text = PERCENT_FORMATTER.format(part.totalPriceNow / totalPortfolioPrice),
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Medium,
+            color = Color(0xFF131D2C),
+            textAlign = TextAlign.End,
+            modifier = Modifier
+                .preferredWidth(50.dp)
+        )
+    }
+}
+
+@Composable
+fun WeightBar(part: PortfolioPart, maxWeightPrice: Double) {
+
+    val partFillWeight = remember { part.totalPriceNow / (maxWeightPrice * part.weight) }
+
     Canvas(
         modifier = Modifier
             .width(140.dp)
@@ -106,17 +146,17 @@ fun WeightBar() {
         )
 
         drawLine(
-            Color(0xFF83D4C3),
+            part.color,
             Offset(
                 16.dp.toPx(),
                 0.dp.toPx()
             ),
             Offset(
-                26.5.dp.toPx(),
+                (16 + 104 * partFillWeight).dp.toPx(),
                 0.dp.toPx()
             ),
             8.dp.toPx(),
-            StrokeCap.Round
+            cap = StrokeCap.Round
         )
     }
 }

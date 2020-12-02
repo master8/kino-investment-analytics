@@ -28,6 +28,8 @@ import androidx.lifecycle.MutableLiveData
 import com.master8.kino.R
 import com.master8.kino.data.source.tinkoff.createInvestApiService
 import com.master8.kino.domain.entity.Instrument
+import com.master8.kino.domain.entity.Portfolio
+import com.master8.kino.domain.entity.PortfolioPart
 import com.master8.kino.domain.entity.PortfolioPosition
 
 class MainActivity : AppCompatActivity() {
@@ -63,12 +65,56 @@ class MainActivity : AppCompatActivity() {
         )
     )
 
+    val portfolio = Portfolio(
+        listOf(
+            PortfolioPart(
+                "US Stock ETFs",
+                2,
+                Color(0xFF83D4C3),
+                listOf(
+                    PortfolioPosition(
+                        Instrument.FXUS,
+                        59.5873603288523,
+                        64.69887662149547,
+                        4
+                    )
+                )
+            ),
+            PortfolioPart(
+                "Gold ETFs",
+                3,
+                Color(0xFF84AEF5),
+                listOf(
+                    PortfolioPosition(
+                        Instrument.FXGD,
+                        12.353537112048155,
+                        12.83419705797148,
+                        3
+                    )
+                )
+            ),
+            PortfolioPart(
+                "IT Stock ETFs",
+                2,
+                Color(0xFFC59BE8),
+                listOf(
+                    PortfolioPosition(
+                        Instrument.FXUS,
+                        59.5873603288523,
+                        64.69887662149547,
+                        2
+                    )
+                )
+            )
+        )
+    )
+
     private val temp = MutableLiveData<List<PortfolioPosition>>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            PortfolioScreen()
+            PortfolioScreen(portfolio)
         }
 
 //        Handler().postDelayed({

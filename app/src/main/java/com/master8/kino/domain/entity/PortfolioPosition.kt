@@ -3,12 +3,12 @@ package com.master8.kino.domain.entity
 data class PortfolioPosition(
     val instrument: Instrument,
     val averagePositionPrice: Double,
-    val nowAveragePositionPrice: Double,
+    val averagePositionPriceNow: Double,
     val lots: Int
 ) {
     val expectedYield: Double
         get() {
-            return nowAveragePositionPrice * lots - averagePositionPrice * lots
+            return averagePositionPriceNow * lots - averagePositionPrice * lots
         }
 
     val expectedYieldInPercent: Double
