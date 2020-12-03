@@ -9,9 +9,7 @@ data class Portfolio(
 }
 
 data class PortfolioPart(
-    val name: String,
-    val weight: Int,
-    val color: Color,
+    val group: InstrumentsGroup,
     val positions: List<PortfolioPosition>
 ) {
     val totalPriceNow: Double = positions.sumByDouble {
