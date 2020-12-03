@@ -14,6 +14,6 @@ data class PortfolioPosition(
     val expectedYieldInPercent: Double
         get() {
             val total = averagePositionPrice * lots
-            return expectedYield / total * 100
+            return expectedYield / total
         }
 }

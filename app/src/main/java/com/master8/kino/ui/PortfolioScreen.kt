@@ -23,6 +23,8 @@ import java.util.*
 @Composable
 fun PortfolioScreen(portfolio: Portfolio) {
     val totalPortfolioPrice = remember { portfolio.totalPriceNow }
+    val expectedYield = remember { portfolio.expectedYield }
+    val expectedYieldInPercent = remember { portfolio.expectedYieldInPercent }
     val maxWeightPrice = remember {
         portfolio.parts.maxOf { it.totalPriceNow / it.group.weight}
     }
@@ -38,12 +40,19 @@ fun PortfolioScreen(portfolio: Portfolio) {
         Box(
             alignment = Alignment.Center
         ) {
-            Text(
-                text = CURRENCY_FORMATTER.format(totalPortfolioPrice),
-                fontSize = 28.sp,
-                color = Color(0xFF131D2C),
-                fontWeight = FontWeight.Medium
-            )
+            Column(horizontalAlignment = Alignment.End) {
+                Text(
+                    text = CURRENCY_FORMATTER.format(totalPortfolioPrice),
+                    fontSize = 28.sp,
+                    color = Color(0xFF131D2C),
+                    fontWeight = FontWeight.Medium
+                )
+                Text(
+                    text = "${CURRENCY_FORMATTER.format(expectedYield)} (${PERCENT_FORMATTER.format(expectedYieldInPercent)})",
+                    fontSize = 12.sp,
+                    color = Color(0xFF9299A2)
+                )
+            }
 
             Canvas(
                 modifier = Modifier
