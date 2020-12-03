@@ -29,7 +29,7 @@ sealed class InstrumentsGroup(
 
     object GoldETFs : InstrumentsGroup(
         "Gold ETFs",
-        2,
+        3,
         Color(0xFFF9D44A),
         listOf(
             Instrument.FXGD,
@@ -49,14 +49,14 @@ sealed class InstrumentsGroup(
 
     object AllWeatherIndex : InstrumentsGroup(
         "All-Weather Index",
-        2,
+        3,
         Color(0xFF83D4C3),
         listOf(Instrument.TUSD)
     )
 
     object ChinaStockETFs : InstrumentsGroup(
         "China Stock ETFs",
-        2,
+        3,
         Color(0xFFF08593),
         listOf(Instrument.FXCN)
     )
