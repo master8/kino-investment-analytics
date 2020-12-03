@@ -41,6 +41,7 @@ fun PortfolioScreen(portfolio: Portfolio) {
             Text(
                 text = CURRENCY_FORMATTER.format(totalPortfolioPrice),
                 fontSize = 28.sp,
+                color = Color(0xFF131D2C),
                 fontWeight = FontWeight.Medium
             )
 
@@ -103,9 +104,9 @@ fun PortfolioPartBlock(
 
         Text(
             text = "${part.group.weight}x",
-            fontSize = 14.sp,
+            fontSize = 12.sp,
             fontWeight = FontWeight.Medium,
-            color = Color(0xFF131D2C)
+            color = Color(0xFFD1D2D5)
         )
 
         WeightBar(part, maxWeightPrice)
