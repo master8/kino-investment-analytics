@@ -61,12 +61,14 @@ sealed class InstrumentsGroup(
         listOf(Instrument.FXCN)
     )
 
-    fun all() = listOf(
-        ITStockETFs,
-        USStockETFs,
-        Stocks,
-        GoldETFs,
-        ChinaStockETFs,
-        AllWeatherIndex
-    )
+    companion object {
+        val all = listOf(
+            ITStockETFs,
+            USStockETFs,
+            Stocks,
+            GoldETFs,
+            ChinaStockETFs,
+            AllWeatherIndex
+        )
+    }
 }

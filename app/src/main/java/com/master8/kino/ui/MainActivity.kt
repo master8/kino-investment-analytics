@@ -31,6 +31,7 @@ import com.master8.kino.domain.entity.Instrument
 import com.master8.kino.domain.entity.Portfolio
 import com.master8.kino.domain.entity.PortfolioPart
 import com.master8.kino.domain.entity.PortfolioPosition
+import com.master8.kino.domain.usecase.GetPortfolioUseCase
 
 class MainActivity : AppCompatActivity() {
 
@@ -38,76 +39,7 @@ class MainActivity : AppCompatActivity() {
         createInvestApiService()
     }
 
-    val positions = listOf(
-        PortfolioPosition(
-            Instrument.FXCN,
-            50.7032649127352,
-            53.54878166543277,
-            7
-        ),
-        PortfolioPosition(
-            Instrument.FXUS,
-            59.5873603288523,
-            64.69887662149547,
-            2
-        ),
-        PortfolioPosition(
-            Instrument.FXIT,
-            105.99351487047174,
-            120.55235458847008,
-            1
-        ),
-        PortfolioPosition(
-            Instrument.FXGD,
-            12.353537112048155,
-            12.83419705797148,
-            10
-        )
-    )
-
-    val portfolio = Portfolio(
-        listOf(
-            PortfolioPart(
-                "US Stock ETFs",
-                2,
-                Color(0xFF83D4C3),
-                listOf(
-                    PortfolioPosition(
-                        Instrument.FXUS,
-                        59.5873603288523,
-                        64.69887662149547,
-                        4
-                    )
-                )
-            ),
-            PortfolioPart(
-                "Gold ETFs",
-                3,
-                Color(0xFF84AEF5),
-                listOf(
-                    PortfolioPosition(
-                        Instrument.FXGD,
-                        12.353537112048155,
-                        12.83419705797148,
-                        3
-                    )
-                )
-            ),
-            PortfolioPart(
-                "IT Stock ETFs",
-                2,
-                Color(0xFFC59BE8),
-                listOf(
-                    PortfolioPosition(
-                        Instrument.FXUS,
-                        59.5873603288523,
-                        64.69887662149547,
-                        2
-                    )
-                )
-            )
-        )
-    )
+    val portfolio = GetPortfolioUseCase().invoke()
 
     private val temp = MutableLiveData<List<PortfolioPosition>>()
 
