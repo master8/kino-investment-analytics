@@ -1,5 +1,9 @@
 package com.master8.kino.data.repository
 
+import com.master8.kino.data.source.db.dao.BuyOperationDao
+import com.master8.kino.data.source.db.dao.UsdToRubDao
+import com.master8.kino.data.source.db.entities.BuyOperationDbEntity
+import com.master8.kino.data.source.db.entities.UsdToRubDbEntity
 import com.master8.kino.data.source.tinkoff.InvestApiService
 import com.master8.kino.domain.PortfolioRepository
 import com.master8.kino.domain.entity.*
@@ -9,7 +13,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class PortfolioRepositoryImpl(
-    private val api: InvestApiService
+    private val api: InvestApiService,
+    private val buyOperationDao: BuyOperationDao,
+    private val usdToRubDao: UsdToRubDao
 ): PortfolioRepository {
 
     override suspend fun getAllBuyOperations(
@@ -30,6 +36,17 @@ class PortfolioRepositoryImpl(
                     Date(it.date),
                     it.quantityExecuted
                 )
+            }
+            .also {  operations ->
+                buyOperationDao.insert(operations.map {
+                    BuyOperationDbEntity(
+                        it.figi,
+                        it.price.value,
+                        it.price.name,
+                        it.date.toString(),
+                        it.quantityExecuted
+                    )
+                })
             }
     }
 
@@ -59,6 +76,23 @@ class PortfolioRepositoryImpl(
     }
 
     override suspend fun convertToUsdAt(date: Date, value: Rub): Usd {
-        return Usd(value.value / getPriceAt(date, Instrument.USD).value)
+        val usdAt = getPriceAt(date, Instrument.USD)
+
+        usdToRubDao.insert(
+            UsdToRubDbEntity(
+                usdAt.value,
+                date.toString()
+            )
+        )
+
+        return Usd(value.value / usdAt.value)
     }
+}
+
+private val Usd.name get() = "usd"
+private val Rub.name get() = "rub"
+
+private val Currency.name get() = when (this) {
+    is Usd -> this.name
+    is Rub -> this.name
 }
