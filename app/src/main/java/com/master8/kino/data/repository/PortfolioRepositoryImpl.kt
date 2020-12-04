@@ -1,5 +1,6 @@
 package com.master8.kino.data.repository
 
+import android.util.Log
 import com.master8.kino.data.source.db.dao.BuyOperationDao
 import com.master8.kino.data.source.db.dao.UsdToRubDao
 import com.master8.kino.data.source.db.entities.BuyOperationDbEntity
@@ -22,32 +23,46 @@ class PortfolioRepositoryImpl(
         instrument: Instrument
     ): List<BuyOperation> = withContext(Dispatchers.IO) {
 
-        return@withContext api.getOperations(instrument.figi)
-            .payload
-            .operations
-            .filter { it.operationType == "Buy" || it.operationType == "BuyCard" }
+        return@withContext buyOperationDao.getAll(instrument.figi)
             .map {
                 BuyOperation(
                     instrument.figi,
-                    when (instrument.currency) {
-                        Instrument.Currency.USD -> Usd(it.price)
-                        Instrument.Currency.RUB -> Rub(it.price)
+                    when (it.currencyName) {
+                        "usd" -> Usd(it.price)
+                        "rub" -> Rub(it.price)
+                        else -> throw RuntimeException("Unsupported currency!")
                     },
                     Date(it.date),
                     it.quantityExecuted
                 )
             }
-            .also {  operations ->
-                buyOperationDao.insert(operations.map {
-                    BuyOperationDbEntity(
-                        it.figi,
-                        it.price.value,
-                        it.price.name,
-                        it.date.toString(),
-                        it.quantityExecuted
-                    )
-                })
-            }
+
+//        return@withContext api.getOperations(instrument.figi)
+//            .payload
+//            .operations
+//            .filter { it.operationType == "Buy" || it.operationType == "BuyCard" }
+//            .map {
+//                BuyOperation(
+//                    instrument.figi,
+//                    when (instrument.currency) {
+//                        Instrument.Currency.USD -> Usd(it.price)
+//                        Instrument.Currency.RUB -> Rub(it.price)
+//                    },
+//                    Date(it.date),
+//                    it.quantityExecuted
+//                )
+//            }
+//            .also {  operations ->
+//                buyOperationDao.insert(operations.map {
+//                    BuyOperationDbEntity(
+//                        it.figi,
+//                        it.price.value,
+//                        it.price.name,
+//                        it.date.toString(),
+//                        it.quantityExecuted
+//                    )
+//                })
+//            }
     }
 
     override suspend fun getPriceAt(
@@ -76,16 +91,24 @@ class PortfolioRepositoryImpl(
     }
 
     override suspend fun convertToUsdAt(date: Date, value: Rub): Usd {
-        val usdAt = getPriceAt(date, Instrument.USD)
 
-        usdToRubDao.insert(
-            UsdToRubDbEntity(
-                usdAt.value,
-                date.toString()
-            )
-        )
+        val usdAt = usdToRubDao.getUsdPriceAt(date.toString())
+            ?.price
+            ?: run {
+                Log.e("mv8", "ERROR USD $date")
+                getPriceAt(date, Instrument.USD)
+                    .value
+                    .also {
+                        usdToRubDao.insert(
+                            UsdToRubDbEntity(
+                                it,
+                                date.toString()
+                            )
+                        )
+                    }
+            }
 
-        return Usd(value.value / usdAt.value)
+        return Usd(value.value / usdAt)
     }
 }
 

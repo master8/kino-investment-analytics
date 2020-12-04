@@ -13,5 +13,5 @@ interface UsdToRubDao {
     suspend fun insert(usdToRub: UsdToRubDbEntity)
 
     @Query("SELECT * FROM usdToRubDbEntity WHERE date = :date")
-    suspend fun getUsdPriceAt(date: String): List<UsdToRubDbEntity>
+    suspend fun getUsdPriceAt(date: String): UsdToRubDbEntity?
 }

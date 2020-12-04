@@ -16,6 +16,6 @@ interface BuyOperationDao {
     suspend fun delete(operations: List<BuyOperationDbEntity>)
 
 
-    @Query("SELECT * FROM buyOperationDbEntity")
-    suspend fun getAll(): List<BuyOperationDbEntity>
+    @Query("SELECT * FROM buyOperationDbEntity WHERE figi = :figi")
+    suspend fun getAll(figi: String): List<BuyOperationDbEntity>
 }
