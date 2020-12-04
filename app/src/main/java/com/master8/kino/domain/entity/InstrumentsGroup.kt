@@ -42,8 +42,9 @@ sealed class InstrumentsGroup(
         2,
         Color(0xFF84AEF5),
         listOf(
-            Instrument.FXIT,
-            Instrument.TECH
+            Instrument.FXIM,
+            Instrument.TECH,
+            Instrument.FXIT
         )
     )
 

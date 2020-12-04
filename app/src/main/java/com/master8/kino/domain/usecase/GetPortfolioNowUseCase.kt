@@ -2,7 +2,7 @@ package com.master8.kino.domain.usecase
 
 import com.master8.kino.domain.entity.*
 
-class GetPortfolioUseCase {
+class GetPortfolioNowUseCase {
 
     operator fun invoke(): Portfolio {
         return Portfolio(
@@ -40,6 +40,12 @@ val tempPositionsData = mapOf(
         105.99351487047174,
         120.55235458847008,
         1
+    ),
+    Instrument.FXIM to PortfolioPosition(
+        Instrument.FXIT,
+        .0,
+        .0,
+        0
     ),
     Instrument.FXGD to PortfolioPosition(
         Instrument.FXGD,

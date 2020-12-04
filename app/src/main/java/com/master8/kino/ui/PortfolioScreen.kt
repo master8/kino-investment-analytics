@@ -22,11 +22,11 @@ import java.util.*
 
 @Composable
 fun PortfolioScreen(portfolio: Portfolio) {
-    val totalPortfolioPrice = remember { portfolio.totalPriceNow }
+    val totalPortfolioPrice = remember { portfolio.endTotalPrice }
     val expectedYield = remember { portfolio.expectedYield }
     val expectedYieldInPercent = remember { portfolio.expectedYieldInPercent }
     val maxWeightPrice = remember {
-        portfolio.parts.maxOf { it.totalPriceNow / it.group.weight}
+        portfolio.parts.maxOf { it.endTotalPrice / it.group.weight}
     }
 
     Column(
@@ -64,7 +64,7 @@ fun PortfolioScreen(portfolio: Portfolio) {
 
                 portfolio.parts.forEach {
 
-                    sweepAngle = (360 * (it.totalPriceNow / totalPortfolioPrice)).toFloat()
+                    sweepAngle = (360 * (it.endTotalPrice / totalPortfolioPrice)).toFloat()
 
                     drawArc(
                         it.group.color,
@@ -121,7 +121,7 @@ fun PortfolioPartBlock(
         WeightBar(part, maxWeightPrice)
 
         Text(
-            text = PERCENT_FORMATTER.format(part.totalPriceNow / totalPortfolioPrice),
+            text = PERCENT_FORMATTER.format(part.endTotalPrice / totalPortfolioPrice),
             fontSize = 14.sp,
             fontWeight = FontWeight.Medium,
             color = Color(0xFF131D2C),
@@ -135,7 +135,7 @@ fun PortfolioPartBlock(
 @Composable
 fun WeightBar(part: PortfolioPart, maxWeightPrice: Double) {
 
-    val partFillWeight = remember { part.totalPriceNow / (maxWeightPrice * part.group.weight) }
+    val partFillWeight = remember { part.endTotalPrice / (maxWeightPrice * part.group.weight) }
 
     Canvas(
         modifier = Modifier

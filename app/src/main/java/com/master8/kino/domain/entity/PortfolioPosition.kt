@@ -2,18 +2,18 @@ package com.master8.kino.domain.entity
 
 data class PortfolioPosition(
     val instrument: Instrument,
-    val averagePositionPrice: Double,
-    val averagePositionPriceNow: Double,
+    val startAveragePositionPrice: Double,
+    val endAveragePositionPrice: Double,
     val lots: Int
 ) {
     val expectedYield: Double
         get() {
-            return averagePositionPriceNow * lots - averagePositionPrice * lots
+            return endAveragePositionPrice * lots - startAveragePositionPrice * lots
         }
 
     val expectedYieldInPercent: Double
         get() {
-            val total = averagePositionPrice * lots
+            val total = startAveragePositionPrice * lots
             return expectedYield / total
         }
 }
