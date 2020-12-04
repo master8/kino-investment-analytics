@@ -4,9 +4,12 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.ui.platform.setContent
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.lifecycleScope
+import com.master8.kino.data.repository.PortfolioRepositoryImpl
 import com.master8.kino.data.source.tinkoff.createInvestApiService
 import com.master8.kino.domain.entity.PortfolioPosition
 import com.master8.kino.domain.usecase.GetPortfolioNowUseCase
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -14,18 +17,18 @@ class MainActivity : AppCompatActivity() {
         createInvestApiService()
     }
 
-    val portfolio = GetPortfolioNowUseCase().invoke()
+    val getPortfolioNowUseCase = GetPortfolioNowUseCase(PortfolioRepositoryImpl(service))
 
     private val temp = MutableLiveData<List<PortfolioPosition>>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            PortfolioScreen(portfolio)
-        }
 
-//        Handler().postDelayed({
-//            temp.value = positions
-//        }, 3000)
+        lifecycleScope.launch {
+            val portfolio = getPortfolioNowUseCase()
+            setContent {
+                PortfolioScreen(portfolio)
+            }
+        }
     }
 }

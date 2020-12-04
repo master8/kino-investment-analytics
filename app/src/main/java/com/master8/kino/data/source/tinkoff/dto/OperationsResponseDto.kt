@@ -12,5 +12,6 @@ data class OperationDto(
     val operationType: String,
     val date: String,
     val quantityExecuted: Int,
-    val price: Double
+    val price: Double,
+    val currency: String
 )
