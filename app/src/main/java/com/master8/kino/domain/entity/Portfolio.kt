@@ -15,10 +15,10 @@ data class PortfolioPart(
     val positions: List<PortfolioPosition>
 ) {
     val startTotalPrice: Usd = positions.sumByUsd {
-        it.startAveragePositionPrice * it.lots
+        it.startAveragePrice * it.lots
     }
 
     val endTotalPrice: Usd = positions.sumByUsd {
-        it.endAveragePositionPrice * it.lots
+        it.endAveragePrice * it.lots
     }
 }
