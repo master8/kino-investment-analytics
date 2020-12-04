@@ -12,9 +12,9 @@ interface InvestApiService {
     @GET("market/candles")
     suspend fun getCandles(
         @Query("figi") figi: String,
-        @Query("from") from: String = "2020-07-01T00:00:00.0+03:00",
-        @Query("to") to: String = "2020-08-01T00:00:00.0+03:00",
-        @Query("interval") internal: String = "day"
+        @Query("from") from: String,
+        @Query("to") to: String,
+        @Query("interval") internal: String
     ): CandlesResponseDto
 
     @Headers("Authorization: Bearer ${TinkoffApiToken.API_TOKEN}")
@@ -22,6 +22,6 @@ interface InvestApiService {
     suspend fun getOperations(
         @Query("figi") figi: String,
         @Query("from") from: String = "2020-01-01T00:00:00.0+03:00",
-        @Query("to") to: String = "2020-10-25T00:00:00.0+03:00"
+        @Query("to") to: String = "2020-12-04T21:00:00.0+03:00"
     ): OperationsResponseDto
 }
