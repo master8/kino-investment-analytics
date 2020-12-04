@@ -5,6 +5,7 @@ import com.master8.kino.data.source.tinkoff.dto.OperationDto
 import com.master8.kino.domain.PortfolioRepository
 import com.master8.kino.domain.entity.Instrument
 import com.master8.kino.domain.entity.PortfolioPosition
+import com.master8.kino.domain.entity.usd
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
@@ -41,8 +42,8 @@ class PortfolioRepositoryImpl(
 
         return PortfolioPosition(
             instrument,
-            totalPrice/lots,
-            nowPriceInUsd,
+            (totalPrice/lots).usd,
+            nowPriceInUsd.usd,
             lots
         )
     }

@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.master8.kino.domain.entity.Portfolio
 import com.master8.kino.domain.entity.PortfolioPart
+import com.master8.kino.domain.entity.*
 import java.util.*
 
 @Composable
@@ -26,7 +27,7 @@ fun PortfolioScreen(portfolio: Portfolio) {
     val expectedYield = remember { portfolio.expectedYield }
     val expectedYieldInPercent = remember { portfolio.expectedYieldInPercent }
     val maxWeightPrice = remember {
-        portfolio.parts.maxOf { it.endTotalPrice / it.group.weight}
+        portfolio.parts.maxOf { it.endTotalPrice.value / it.group.weight}
     }
 
     Column(
@@ -42,13 +43,13 @@ fun PortfolioScreen(portfolio: Portfolio) {
         ) {
             Column(horizontalAlignment = Alignment.End) {
                 Text(
-                    text = CURRENCY_FORMATTER.format(totalPortfolioPrice),
+                    text = CURRENCY_FORMATTER.format(totalPortfolioPrice.value),
                     fontSize = 28.sp,
                     color = Color(0xFF131D2C),
                     fontWeight = FontWeight.Medium
                 )
                 Text(
-                    text = "${CURRENCY_FORMATTER.format(expectedYield)} (${PERCENT_FORMATTER.format(expectedYieldInPercent)})",
+                    text = "${CURRENCY_FORMATTER.format(expectedYield.value)} (${PERCENT_FORMATTER.format(expectedYieldInPercent)})",
                     fontSize = 12.sp,
                     color = Color(0xFF9299A2)
                 )
@@ -98,7 +99,7 @@ fun PortfolioScreen(portfolio: Portfolio) {
 @Composable
 fun PortfolioPartBlock(
     part: PortfolioPart,
-    totalPortfolioPrice: Double,
+    totalPortfolioPrice: Usd,
     maxWeightPrice: Double
 ) {
     Row(
@@ -121,7 +122,7 @@ fun PortfolioPartBlock(
         WeightBar(part, maxWeightPrice)
 
         Text(
-            text = PERCENT_FORMATTER.format(part.endTotalPrice / totalPortfolioPrice),
+            text = PERCENT_FORMATTER.format((part.endTotalPrice / totalPortfolioPrice).value),
             fontSize = 14.sp,
             fontWeight = FontWeight.Medium,
             color = Color(0xFF131D2C),
@@ -135,7 +136,7 @@ fun PortfolioPartBlock(
 @Composable
 fun WeightBar(part: PortfolioPart, maxWeightPrice: Double) {
 
-    val partFillWeight = remember { part.endTotalPrice / (maxWeightPrice * part.group.weight) }
+    val partFillWeight = remember { part.endTotalPrice.value / (maxWeightPrice * part.group.weight) }
 
     Canvas(
         modifier = Modifier

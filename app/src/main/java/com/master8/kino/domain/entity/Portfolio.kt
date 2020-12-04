@@ -3,22 +3,22 @@ package com.master8.kino.domain.entity
 data class Portfolio(
     val parts: List<PortfolioPart>
 ) {
-    private val startTotalPrice: Double = parts.sumByDouble { it.startTotalPrice }
-    val endTotalPrice: Double = parts.sumByDouble { it.endTotalPrice }
+    private val startTotalPrice: Usd = parts.sumByUsd { it.startTotalPrice }
+    val endTotalPrice: Usd = parts.sumByUsd { it.endTotalPrice }
 
-    val expectedYield: Double = endTotalPrice - startTotalPrice
-    val expectedYieldInPercent: Double = expectedYield / startTotalPrice
+    val expectedYield: Usd = endTotalPrice - startTotalPrice
+    val expectedYieldInPercent: Double = (expectedYield / startTotalPrice).value
 }
 
 data class PortfolioPart(
     val group: InstrumentsGroup,
     val positions: List<PortfolioPosition>
 ) {
-    val startTotalPrice: Double = positions.sumByDouble {
+    val startTotalPrice: Usd = positions.sumByUsd {
         it.startAveragePositionPrice * it.lots
     }
 
-    val endTotalPrice: Double = positions.sumByDouble {
+    val endTotalPrice: Usd = positions.sumByUsd {
         it.endAveragePositionPrice * it.lots
     }
 }
