@@ -164,7 +164,16 @@ class PortfolioRepositoryImpl(
     }
 
     override suspend fun getLastAvailableDate(): Date {
-        return Date("2020-12-04T18:29:00.0+03:00")//TODO
+        val now = Date("2020-12-07T15:29:00.0+03:00")
+        val targetTime = START_DATE.copyDayFrom(now)
+
+        return when {
+            targetTime.isSaturday -> targetTime.minus(1)
+            targetTime.isSunday -> targetTime.minus(2)
+            now >= targetTime -> targetTime
+            targetTime.isMonday -> targetTime.minus(3)
+            else -> targetTime.minus(1)
+        }
     }
 
     override suspend fun getStartDate(): Date {
@@ -176,7 +185,7 @@ class PortfolioRepositoryImpl(
     }
 
     private companion object {
-        val START_DATE = Date("2020-01-01T00:00:00.0+03:00")
+        val START_DATE = Date("2020-01-01T18:29:00.0+03:00")
     }
 }
 
