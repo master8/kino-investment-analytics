@@ -1,10 +1,9 @@
 package com.master8.kino.data.repository
 
-import android.util.Log
 import com.master8.kino.data.source.db.dao.BuyOperationDao
-import com.master8.kino.data.source.db.dao.UsdToRubDao
+import com.master8.kino.data.source.db.dao.InstrumentPriceDao
 import com.master8.kino.data.source.db.entities.BuyOperationDbEntity
-import com.master8.kino.data.source.db.entities.UsdToRubDbEntity
+import com.master8.kino.data.source.db.entities.InstrumentPriceEntity
 import com.master8.kino.data.source.tinkoff.InvestApiService
 import com.master8.kino.domain.PortfolioRepository
 import com.master8.kino.domain.entity.*
@@ -16,7 +15,7 @@ import kotlinx.coroutines.withContext
 class PortfolioRepositoryImpl(
     private val api: InvestApiService,
     private val buyOperationDao: BuyOperationDao,
-    private val usdToRubDao: UsdToRubDao
+    private val instrumentPriceDao: InstrumentPriceDao
 ): PortfolioRepository {
 
     override suspend fun getAllBuyOperations(
@@ -69,7 +68,24 @@ class PortfolioRepositoryImpl(
         date: Date, instrument: Instrument
     ): Currency = withContext(Dispatchers.IO) {
 
-        return@withContext api.getCandles(
+        getPriceFromDbAt(date, instrument)
+            ?: getPriceFromApiAt(date, instrument)
+    }
+
+    private suspend fun getPriceFromDbAt(
+        date: Date, instrument: Instrument
+    ): Currency? = withContext(Dispatchers.IO) {
+
+        instrumentPriceDao.getPriceAt(date.toString(), instrument.figi)
+            ?.price
+            ?.convertTo(instrument.currency)
+    }
+
+    private suspend fun getPriceFromApiAt(
+        date: Date, instrument: Instrument
+    ): Currency = withContext(Dispatchers.IO) {
+
+        api.getCandles(
             instrument.figi,
             date.toString(),
             date.nextMinute.toString(),
@@ -78,11 +94,16 @@ class PortfolioRepositoryImpl(
             .candles
             .first()
             .c
-            .let {
-                when (instrument.currency) {
-                    Instrument.Currency.USD -> Usd(it)
-                    Instrument.Currency.RUB -> Rub(it)
-                }
+            .convertTo(instrument.currency)
+            .also {
+                instrumentPriceDao.insert(
+                    InstrumentPriceEntity(
+                        instrument.figi,
+                        it.value,
+                        it.name,
+                        date.toString()
+                    )
+                )
             }
     }
 
@@ -91,31 +112,16 @@ class PortfolioRepositoryImpl(
     }
 
     override suspend fun convertToUsdAt(date: Date, value: Rub): Usd {
-
-        val usdAt = usdToRubDao.getUsdPriceAt(date.toString())
-            ?.price
-            ?: run {
-                Log.e("mv8", "ERROR USD $date")
-                getPriceAt(date, Instrument.USD)
-                    .value
-                    .also {
-                        usdToRubDao.insert(
-                            UsdToRubDbEntity(
-                                it,
-                                date.toString()
-                            )
-                        )
-                    }
-            }
-
-        return Usd(value.value / usdAt)
+        return Usd(value.value / getPriceAt(date, Instrument.USD).value)
     }
 }
 
-private val Usd.name get() = "usd"
-private val Rub.name get() = "rub"
-
 private val Currency.name get() = when (this) {
-    is Usd -> this.name
-    is Rub -> this.name
+    is Usd -> "usd"
+    is Rub -> "rub"
+}
+
+private fun Double.convertTo(currency: Instrument.Currency) = when (currency) {
+    Instrument.Currency.USD -> Usd(this)
+    Instrument.Currency.RUB -> Rub(this)
 }

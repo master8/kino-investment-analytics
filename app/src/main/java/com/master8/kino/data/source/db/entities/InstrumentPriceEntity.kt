@@ -4,9 +4,11 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class UsdToRubDbEntity(
+data class InstrumentPriceEntity(
 
+    val figi: String,
     val price: Double,
+    val currencyName: String,
     val date: String,
 
     @PrimaryKey(autoGenerate = true)
