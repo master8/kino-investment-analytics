@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.sp
 import com.master8.kino.domain.entity.Portfolio
 import com.master8.kino.domain.entity.PortfolioPart
 import com.master8.kino.domain.entity.PortfolioPosition
-import com.master8.kino.domain.entity.Usd
 import com.master8.kino.ui.ext.image
 
 @Composable
@@ -38,7 +37,6 @@ fun PositionsScreen(portfolio: Portfolio) {
 
         Surface(elevation = 4.dp) {
             Column(
-                horizontalAlignment = Alignment.End,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(all = 16.dp),
