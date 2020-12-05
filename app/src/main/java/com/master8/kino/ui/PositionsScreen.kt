@@ -71,11 +71,7 @@ fun PositionsScreen(portfolio: Portfolio) {
 
             portfolio.parts.forEach {
 
-                PortfolioPartBlock(
-                    it,
-                    totalPortfolioPrice,
-                    maxWeightPrice
-                )
+                PortfolioPartBlock(it)
 
                 Spacer(modifier = Modifier.preferredHeight(8.dp))
             }
@@ -85,9 +81,7 @@ fun PositionsScreen(portfolio: Portfolio) {
 
 @Composable
 private fun PortfolioPartBlock(
-    part: PortfolioPart,
-    totalPortfolioPrice: Usd,
-    maxWeightPrice: Double
+    part: PortfolioPart
 ) {
     Column {
         Text(
@@ -96,10 +90,6 @@ private fun PortfolioPartBlock(
             color = Color(0xFF9299A2),
             modifier = Modifier.padding(horizontal = 16.dp)
         )
-
-//        Spacer(modifier = Modifier.preferredHeight(8.dp))
-
-//        WeightBar(part, maxWeightPrice)
 
         Spacer(modifier = Modifier.preferredHeight(8.dp))
 
