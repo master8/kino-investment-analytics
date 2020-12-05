@@ -27,9 +27,6 @@ fun PositionsScreen(portfolio: Portfolio, onClick: () -> Unit) {
     val totalPortfolioPrice = remember { portfolio.endTotalPrice }
     val expectedYield = remember { portfolio.expectedYield }
     val expectedYieldInPercent = remember { portfolio.expectedYieldInPercent }
-    val maxWeightPrice = remember {
-        portfolio.parts.maxOf { it.endTotalPrice.value / it.group.weight}
-    }
 
     Column(
         modifier = Modifier
@@ -85,7 +82,7 @@ private fun PortfolioPartBlock(
 ) {
     Column {
         Text(
-            text = part.group.name,
+            text = "${part.group.name} · ${CURRENCY_FORMATTER.format(part.endTotalPrice.value)}",
             fontSize = 12.sp,
             color = Color(0xFF9299A2),
             modifier = Modifier.padding(horizontal = 16.dp)
