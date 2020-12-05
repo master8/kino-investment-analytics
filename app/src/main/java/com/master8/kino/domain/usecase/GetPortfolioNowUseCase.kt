@@ -31,7 +31,7 @@ class GetPortfolioNowUseCase(
         )
 
         val lots = operations.lots
-        val startAveragePrice = operations.totalPrice() / lots
+        val startAveragePrice = if (lots > 0) operations.totalPrice() / lots else Usd(.0)
         val endAveragePrice = getNowAveragePrice(instrument)
 
         return PortfolioPosition(
