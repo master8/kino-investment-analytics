@@ -2,7 +2,6 @@ package com.master8.kino.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollableColumn
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Surface
@@ -12,16 +11,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.res.loadImageResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.master8.kino.R
 import com.master8.kino.domain.entity.Portfolio
 import com.master8.kino.domain.entity.PortfolioPart
-import com.master8.kino.domain.entity.*
-import com.master8.kino.ui.charts.WeightBar
+import com.master8.kino.domain.entity.PortfolioPosition
+import com.master8.kino.domain.entity.Usd
+import com.master8.kino.ui.ext.image
 
 @Composable
 fun PositionsScreen(portfolio: Portfolio) {
@@ -98,9 +97,9 @@ private fun PortfolioPartBlock(
             modifier = Modifier.padding(horizontal = 16.dp)
         )
 
-        Spacer(modifier = Modifier.preferredHeight(8.dp))
+//        Spacer(modifier = Modifier.preferredHeight(8.dp))
 
-        WeightBar(part, maxWeightPrice)
+//        WeightBar(part, maxWeightPrice)
 
         Spacer(modifier = Modifier.preferredHeight(8.dp))
 
@@ -121,10 +120,16 @@ private fun PositionBlock(
             .padding(horizontal = 16.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Surface(shape = CircleShape) {
-            Image(imageResource(R.drawable.im_fxit),
-                modifier = Modifier.preferredSize(40.dp)
-            )
+        Surface(
+            shape = CircleShape,
+            modifier = Modifier.preferredSize(40.dp)
+        ) {
+            loadImageResource(position.instrument.image).resource.resource?.let {
+                Image(
+                    asset = it,
+                    modifier = Modifier.preferredSize(40.dp)
+                )
+            }
         }
 
         Spacer(modifier = Modifier.preferredWidth(16.dp))
@@ -150,7 +155,7 @@ private fun PositionBlock(
                 Text(
                     text = "${position.lots} lots · ${CURRENCY_FORMATTER.format(position.endAveragePrice.value)}",
                     fontSize = 12.sp,
-                    fontWeight = FontWeight.Medium,
+                    fontWeight = FontWeight.Normal,
                     color = Color(0xFF9299A2),
                     modifier = Modifier.weight(1f)
                 )
