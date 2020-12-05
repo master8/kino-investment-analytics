@@ -1,6 +1,5 @@
 package com.master8.kino.ui
 
-import android.icu.text.NumberFormat
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
@@ -8,9 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -18,8 +15,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.master8.kino.domain.entity.Portfolio
 import com.master8.kino.domain.entity.PortfolioPart
-import com.master8.kino.domain.entity.*
-import java.util.*
+import com.master8.kino.domain.entity.Usd
+import com.master8.kino.domain.entity.times
+import com.master8.kino.ui.charts.WeightBar
+import com.master8.kino.ui.ext.color
 
 @Composable
 fun PortfolioScreen(portfolio: Portfolio) {
@@ -97,7 +96,7 @@ fun PortfolioScreen(portfolio: Portfolio) {
 }
 
 @Composable
-fun PortfolioPartBlock(
+private fun PortfolioPartBlock(
     part: PortfolioPart,
     totalPortfolioPrice: Usd,
     maxWeightPrice: Double
@@ -132,48 +131,3 @@ fun PortfolioPartBlock(
         )
     }
 }
-
-@Composable
-fun WeightBar(part: PortfolioPart, maxWeightPrice: Double) {
-
-    val partFillWeight = remember { part.endTotalPrice.value / (maxWeightPrice * part.group.weight) }
-
-    Canvas(
-        modifier = Modifier
-            .width(140.dp)
-    ) {
-        drawLine(
-            Color(0xFFEBECED),
-            Offset(
-                16.dp.toPx(),
-                0.dp.toPx()
-            ),
-            Offset(
-                120.dp.toPx(),
-                0.dp.toPx()
-            ),
-            8.dp.toPx(),
-            StrokeCap.Round
-        )
-
-        drawLine(
-            part.group.color,
-            Offset(
-                16.dp.toPx(),
-                0.dp.toPx()
-            ),
-            Offset(
-                (16 + 104 * partFillWeight).dp.toPx(),
-                0.dp.toPx()
-            ),
-            8.dp.toPx(),
-            cap = StrokeCap.Round
-        )
-    }
-}
-
-val CURRENCY_FORMATTER = NumberFormat.getInstance(Locale.US, NumberFormat.CURRENCYSTYLE)
-val PERCENT_FORMATTER = NumberFormat.getInstance(Locale.US, NumberFormat.PERCENTSTYLE)
-    .apply {
-        maximumFractionDigits = 2
-    }

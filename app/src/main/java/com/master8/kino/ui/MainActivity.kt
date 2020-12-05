@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             val portfolio = getPortfolioNowUseCase()
             setContent {
-                PortfolioScreen(portfolio)
+                PositionsScreen(portfolio)
             }
         }
     }

@@ -13,7 +13,14 @@ data class PortfolioPosition(
 
     val expectedYieldInPercent: Double
         get() {
+            if (lots == 0) {
+                return .0
+            }
+
             val total = startAveragePrice * lots
             return (expectedYield / total).value
         }
+
+    val startTotalPrice: Usd = startAveragePrice * lots
+    val endTotalPrice: Usd = endAveragePrice * lots
 }
