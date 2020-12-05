@@ -2,6 +2,9 @@ package com.master8.kino.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.setContent
 import androidx.lifecycle.lifecycleScope
 import androidx.room.Room
@@ -36,9 +39,24 @@ class MainActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             val portfolio = getPortfolioNowUseCase()
+
+            var selectedPage by mutableStateOf(Page.Portfolio)
+
             setContent {
-                PositionsScreen(portfolio)
+                when (selectedPage) {
+                    Page.Portfolio -> PortfolioScreen(portfolio) {
+                        selectedPage = Page.Positions
+                    }
+                    Page.Positions -> PositionsScreen(portfolio) {
+                        selectedPage = Page.Portfolio
+                    }
+                }
             }
         }
     }
+}
+
+enum class Page {
+    Portfolio,
+    Positions
 }

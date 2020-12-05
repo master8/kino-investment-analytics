@@ -2,6 +2,7 @@ package com.master8.kino.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollableColumn
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Surface
@@ -22,7 +23,7 @@ import com.master8.kino.domain.entity.PortfolioPosition
 import com.master8.kino.ui.ext.image
 
 @Composable
-fun PositionsScreen(portfolio: Portfolio) {
+fun PositionsScreen(portfolio: Portfolio, onClick: () -> Unit) {
     val totalPortfolioPrice = remember { portfolio.endTotalPrice }
     val expectedYield = remember { portfolio.expectedYield }
     val expectedYieldInPercent = remember { portfolio.expectedYieldInPercent }
@@ -39,17 +40,18 @@ fun PositionsScreen(portfolio: Portfolio) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(all = 16.dp),
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .clickable(onClick = onClick, indication = null)
             ) {
                 Text(
                     text = CURRENCY_FORMATTER.format(totalPortfolioPrice.value),
-                    fontSize = 24.sp,
+                    fontSize = 18.sp,
                     color = Color(0xFF131D2C),
                     fontWeight = FontWeight.Medium
                 )
                 Text(
                     text = "${CURRENCY_FORMATTER.format(expectedYield.value)} (${PERCENT_FORMATTER.format(expectedYieldInPercent)})",
-                    fontSize = 14.sp,
+                    fontSize = 12.sp,
                     color = if (expectedYield.value > 0) {
                         Color(0xFF56B355)
                     } else {

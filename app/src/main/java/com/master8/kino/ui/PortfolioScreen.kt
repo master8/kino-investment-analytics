@@ -1,6 +1,7 @@
 package com.master8.kino.ui
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -21,7 +22,7 @@ import com.master8.kino.ui.charts.WeightBar
 import com.master8.kino.ui.ext.color
 
 @Composable
-fun PortfolioScreen(portfolio: Portfolio) {
+fun PortfolioScreen(portfolio: Portfolio, onClick: () -> Unit) {
     val totalPortfolioPrice = remember { portfolio.endTotalPrice }
     val expectedYield = remember { portfolio.expectedYield }
     val expectedYieldInPercent = remember { portfolio.expectedYieldInPercent }
@@ -40,7 +41,11 @@ fun PortfolioScreen(portfolio: Portfolio) {
         Box(
             alignment = Alignment.Center
         ) {
-            Column(horizontalAlignment = Alignment.End) {
+            Column(
+                horizontalAlignment = Alignment.End,
+                modifier = Modifier
+                    .clickable(onClick = onClick, indication = null)
+            ) {
                 Text(
                     text = CURRENCY_FORMATTER.format(totalPortfolioPrice.value),
                     fontSize = 28.sp,
