@@ -11,6 +11,16 @@ data class Date(
         return value
     }
 
+    private fun toMillis(): Long = dateFormatter.parse(value)!!.time
+
+    operator fun compareTo(other: Date): Int {
+        if (this.value == other.value) {
+            return 0
+        }
+
+        return this.toMillis().compareTo(other.toMillis())
+    }
+
     val nextMinute: Date
         get() {
             calendar.time = dateFormatter.parse(value)!!

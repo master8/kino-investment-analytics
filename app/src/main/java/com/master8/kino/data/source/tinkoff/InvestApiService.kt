@@ -21,7 +21,7 @@ interface InvestApiService {
     @GET("operations")
     suspend fun getOperations(
         @Query("figi") figi: String,
-        @Query("from") from: String = "2020-01-01T00:00:00.0+03:00",
-        @Query("to") to: String = "2020-12-04T21:00:00.0+03:00"
+        @Query("from") from: String,
+        @Query("to") to: String
     ): OperationsResponseDto
 }

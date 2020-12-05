@@ -6,7 +6,7 @@ import androidx.compose.ui.platform.setContent
 import androidx.lifecycle.lifecycleScope
 import androidx.room.Room
 import com.master8.kino.data.repository.PortfolioRepositoryImpl
-import com.master8.kino.data.source.AppDatabase
+import com.master8.kino.data.source.db.AppDatabase
 import com.master8.kino.data.source.tinkoff.createInvestApiService
 import com.master8.kino.domain.usecase.GetPortfolioNowUseCase
 import kotlinx.coroutines.launch
@@ -25,7 +25,8 @@ class MainActivity : AppCompatActivity() {
             PortfolioRepositoryImpl(
                 createInvestApiService(),
                 db.buyOperationDao(),
-                db.usdToRubDao()
+                db.usdToRubDao(),
+                db.lastUpdatedDateDao()
             )
         )
     }

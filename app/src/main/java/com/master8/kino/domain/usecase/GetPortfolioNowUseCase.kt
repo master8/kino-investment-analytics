@@ -26,7 +26,9 @@ class GetPortfolioNowUseCase(
     }
 
     private suspend fun buildPosition(instrument: Instrument): PortfolioPosition {
-        val operations = repository.getAllBuyOperations(instrument)
+        val operations = repository.getBuyOperations(
+            instrument, repository.getStartDate(), repository.getLastAvailableDate()
+        )
 
         val lots = operations.lots
         val startAveragePrice = operations.totalPrice() / lots

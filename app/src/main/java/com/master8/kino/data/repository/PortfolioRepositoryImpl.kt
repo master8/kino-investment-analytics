@@ -2,8 +2,10 @@ package com.master8.kino.data.repository
 
 import com.master8.kino.data.source.db.dao.BuyOperationDao
 import com.master8.kino.data.source.db.dao.InstrumentPriceDao
+import com.master8.kino.data.source.db.dao.LastUpdatedDateDao
 import com.master8.kino.data.source.db.entities.BuyOperationDbEntity
 import com.master8.kino.data.source.db.entities.InstrumentPriceEntity
+import com.master8.kino.data.source.db.entities.LastUpdatedDateEntity
 import com.master8.kino.data.source.tinkoff.InvestApiService
 import com.master8.kino.domain.PortfolioRepository
 import com.master8.kino.domain.entity.*
@@ -15,14 +17,51 @@ import kotlinx.coroutines.withContext
 class PortfolioRepositoryImpl(
     private val api: InvestApiService,
     private val buyOperationDao: BuyOperationDao,
-    private val instrumentPriceDao: InstrumentPriceDao
+    private val instrumentPriceDao: InstrumentPriceDao,
+    private val lastUpdatedDateDao: LastUpdatedDateDao
 ): PortfolioRepository {
 
-    override suspend fun getAllBuyOperations(
-        instrument: Instrument
+    override suspend fun getBuyOperations(
+        instrument: Instrument,
+        from: Date,
+        to: Date
     ): List<BuyOperation> = withContext(Dispatchers.IO) {
 
-        return@withContext buyOperationDao.getAll(instrument.figi)
+        val lastUpdatedDate = lastUpdatedDateDao.get(instrument.figi)
+
+        return@withContext when {
+            lastUpdatedDate == null -> {
+                getBuyOperationsFromApi(
+                    instrument,
+                    LastUpdatedDateEntity(
+                        instrument.figi,
+                        from.toString()
+                    ),
+                    to
+                )
+            }
+            Date(lastUpdatedDate.date) >= to -> {
+                getBuyOperationsFromDb(instrument, from, to)
+            }
+            else -> {
+                getBuyOperationsFromDb(
+                    instrument, from, to
+                ) + getBuyOperationsFromApi(
+                    instrument,
+                    lastUpdatedDate,
+                    to
+                )
+            }
+        }
+    }
+
+    private suspend fun getBuyOperationsFromDb(
+        instrument: Instrument,
+        from: Date,
+        to: Date
+    ): List<BuyOperation> = withContext(Dispatchers.IO) {
+
+        buyOperationDao.getAll(instrument.figi)
             .map {
                 BuyOperation(
                     instrument.figi,
@@ -35,33 +74,50 @@ class PortfolioRepositoryImpl(
                     it.quantityExecuted
                 )
             }
+            .filter { it.date >= from && it.date <= to }
+    }
 
-//        return@withContext api.getOperations(instrument.figi)
-//            .payload
-//            .operations
-//            .filter { it.operationType == "Buy" || it.operationType == "BuyCard" }
-//            .map {
-//                BuyOperation(
-//                    instrument.figi,
-//                    when (instrument.currency) {
-//                        Instrument.Currency.USD -> Usd(it.price)
-//                        Instrument.Currency.RUB -> Rub(it.price)
-//                    },
-//                    Date(it.date),
-//                    it.quantityExecuted
-//                )
-//            }
-//            .also {  operations ->
-//                buyOperationDao.insert(operations.map {
-//                    BuyOperationDbEntity(
-//                        it.figi,
-//                        it.price.value,
-//                        it.price.name,
-//                        it.date.toString(),
-//                        it.quantityExecuted
-//                    )
-//                })
-//            }
+    private suspend fun getBuyOperationsFromApi(
+        instrument: Instrument,
+        lastUpdatedDate: LastUpdatedDateEntity,
+        to: Date
+    ): List<BuyOperation> = withContext(Dispatchers.IO) {
+        try {
+            api.getOperations(
+                instrument.figi,
+                lastUpdatedDate.date,
+                to.toString()
+            )
+        } catch (e: Exception) {
+            return@withContext listOf()
+        }.payload
+            .operations
+            .filter { it.operationType == "Buy" || it.operationType == "BuyCard" }
+            .map {
+                BuyOperation(
+                    instrument.figi,
+                    when (instrument.currency) {
+                        Instrument.Currency.USD -> Usd(it.price)
+                        Instrument.Currency.RUB -> Rub(it.price)
+                    },
+                    Date(it.date),
+                    it.quantityExecuted
+                )
+            }
+            .also {  operations ->
+                lastUpdatedDateDao.insert(
+                    lastUpdatedDate.copy(date = to.toString())
+                )
+                buyOperationDao.insert(operations.map {
+                    BuyOperationDbEntity(
+                        it.figi,
+                        it.price.value,
+                        it.price.name,
+                        it.date.toString(),
+                        it.quantityExecuted
+                    )
+                })
+            }
     }
 
     override suspend fun getPriceAt(
@@ -111,8 +167,16 @@ class PortfolioRepositoryImpl(
         return Date("2020-12-04T18:29:00.0+03:00")//TODO
     }
 
+    override suspend fun getStartDate(): Date {
+        return START_DATE
+    }
+
     override suspend fun convertToUsdAt(date: Date, value: Rub): Usd {
         return Usd(value.value / getPriceAt(date, Instrument.USD).value)
+    }
+
+    private companion object {
+        val START_DATE = Date("2020-01-01T00:00:00.0+03:00")
     }
 }
 
