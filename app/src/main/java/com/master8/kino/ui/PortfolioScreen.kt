@@ -128,7 +128,10 @@ private fun PortfolioPartBlock(
             color = Color(0xFFD1D2D5)
         )
 
-        WeightBar(part, maxWeightPrice)
+        WeightBar(part, maxWeightPrice, 104,
+            modifier = Modifier
+                .preferredWidth(140.dp)
+        )
 
         Text(
             text = PERCENT_FORMATTER.format((part.endTotalPrice / totalPortfolioPrice).value),

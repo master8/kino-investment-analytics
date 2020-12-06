@@ -102,7 +102,7 @@ fun RecommendationsScreen(portfolio: Portfolio, onClick: () -> Unit) {
 
                 PortfolioPartBlock(it, maxWeightPrice)
 
-                Spacer(modifier = Modifier.preferredHeight(16.dp))
+                Spacer(modifier = Modifier.preferredHeight(8.dp))
             }
         }
     }
@@ -123,10 +123,9 @@ private fun PortfolioPartBlock(
                 .padding(horizontal = 16.dp)
         ) {
             Text(
-                text = "${part.group.name} · ${CURRENCY_FORMATTER.format(part.endTotalPrice.value)}",
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Medium,
-                color = Color(0xFF131D2C),
+                text = "${part.group.name}",
+                fontSize = 12.sp,
+                color = Color(0xFF9299A2),
                 modifier = Modifier.weight(1f)
             )
 
@@ -139,8 +138,9 @@ private fun PortfolioPartBlock(
 
         Row {
 
-            WeightBar(part, maxWeightPrice,
+            WeightBar(part, maxWeightPrice, 154,
                 modifier = Modifier.weight(1f)
+                    .preferredWidth(190.dp)
                     .padding(top = 8.dp)
             )
 

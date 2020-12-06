@@ -1,7 +1,6 @@
 package com.master8.kino.ui.charts
 
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.preferredWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -13,13 +12,12 @@ import com.master8.kino.domain.entity.PortfolioPart
 import com.master8.kino.ui.ext.color
 
 @Composable
-fun WeightBar(part: PortfolioPart, maxWeightPrice: Double, modifier: Modifier = Modifier) {
+fun WeightBar(part: PortfolioPart, maxWeightPrice: Double, barWidth: Int, modifier: Modifier = Modifier) {
 
     val partFillWeight = remember { part.endTotalPrice.value / (maxWeightPrice * part.group.weight) }
 
     Canvas(
         modifier = modifier
-            .preferredWidth(140.dp)
     ) {
         drawLine(
             Color(0xFFEBECED),
@@ -28,7 +26,7 @@ fun WeightBar(part: PortfolioPart, maxWeightPrice: Double, modifier: Modifier = 
                 0.dp.toPx()
             ),
             Offset(
-                120.dp.toPx(),
+                (barWidth + 16).dp.toPx(),
                 0.dp.toPx()
             ),
             8.dp.toPx(),
@@ -42,7 +40,7 @@ fun WeightBar(part: PortfolioPart, maxWeightPrice: Double, modifier: Modifier = 
                 0.dp.toPx()
             ),
             Offset(
-                (16 + 104 * partFillWeight).dp.toPx(),
+                (16 + barWidth * partFillWeight).dp.toPx(),
                 0.dp.toPx()
             ),
             8.dp.toPx(),
