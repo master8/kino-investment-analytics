@@ -22,7 +22,11 @@ import com.master8.kino.ui.charts.WeightBar
 import com.master8.kino.ui.ext.color
 
 @Composable
-fun PortfolioScreen(portfolio: Portfolio, onClick: () -> Unit) {
+fun PortfolioScreen(
+    portfolio: Portfolio,
+    onTitleClick: () -> Unit,
+    onContentClick: () -> Unit
+) {
     val totalPortfolioPrice = remember { portfolio.endTotalPrice }
     val expectedYield = remember { portfolio.expectedYield }
     val expectedYieldInPercent = remember { portfolio.expectedYieldInPercent }
@@ -33,7 +37,8 @@ fun PortfolioScreen(portfolio: Portfolio, onClick: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(16.dp)
+            .clickable(onClick = onContentClick, indication = null),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -44,7 +49,7 @@ fun PortfolioScreen(portfolio: Portfolio, onClick: () -> Unit) {
             Column(
                 horizontalAlignment = Alignment.End,
                 modifier = Modifier
-                    .clickable(onClick = onClick, indication = null)
+                    .clickable(onClick = onTitleClick, indication = null)
             ) {
                 Text(
                     text = CURRENCY_FORMATTER.format(totalPortfolioPrice.value),

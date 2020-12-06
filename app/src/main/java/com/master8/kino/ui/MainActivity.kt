@@ -44,10 +44,15 @@ class MainActivity : AppCompatActivity() {
 
             setContent {
                 when (selectedPage) {
-                    Page.Portfolio -> PortfolioScreen(portfolio) {
+                    Page.Portfolio -> PortfolioScreen(portfolio, {
                         selectedPage = Page.Positions
+                    }) {
+                        selectedPage = Page.Recommendations
                     }
                     Page.Positions -> PositionsScreen(portfolio) {
+                        selectedPage = Page.Portfolio
+                    }
+                    Page.Recommendations -> RecommendationsScreen(portfolio) {
                         selectedPage = Page.Portfolio
                     }
                 }
@@ -58,5 +63,6 @@ class MainActivity : AppCompatActivity() {
 
 enum class Page {
     Portfolio,
-    Positions
+    Positions,
+    Recommendations
 }

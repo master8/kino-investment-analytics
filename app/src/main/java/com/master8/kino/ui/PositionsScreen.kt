@@ -94,7 +94,7 @@ private fun PortfolioPartBlock(
             PositionBlock(it)
         }
 
-        Spacer(modifier = Modifier.preferredWidth(16.dp))
+//        Spacer(modifier = Modifier.preferredWidth(16.dp))
     }
 }
 
