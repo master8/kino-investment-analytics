@@ -164,7 +164,7 @@ class PortfolioRepositoryImpl(
     }
 
     override suspend fun getLastAvailableDate(): Date {
-        val now = Date("2020-12-07T15:29:00.0+03:00")
+        val now = Date.now
         val targetTime = START_DATE.copyDayFrom(now)
 
         return when {
