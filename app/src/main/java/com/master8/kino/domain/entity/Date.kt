@@ -29,6 +29,13 @@ data class Date(
             return Date(dateFormatter.format(calendar.time))
         }
 
+    fun minusHour(numberOfHours: Int): Date {
+        calendar.time = dateFormatter.parse(value)!!
+        calendar.add(Calendar.HOUR, -numberOfHours)
+
+        return Date(dateFormatter.format(calendar.time))
+    }
+
     fun minus(numberOfDays: Int): Date {
         calendar.time = dateFormatter.parse(value)!!
         calendar.add(Calendar.DAY_OF_YEAR, -numberOfDays)

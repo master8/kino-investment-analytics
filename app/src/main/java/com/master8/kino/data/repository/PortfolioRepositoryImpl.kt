@@ -141,14 +141,43 @@ class PortfolioRepositoryImpl(
         date: Date, instrument: Instrument
     ): Currency = withContext(Dispatchers.IO) {
 
+        try {
+            api.getCandles(
+                instrument.figi,
+                date.toString(),
+                date.nextMinute.toString(),
+                "1min"
+            ).payload
+                .candles
+                .last()
+                .c
+                .convertTo(instrument.currency)
+                .also {
+                    instrumentPriceDao.insert(
+                        InstrumentPriceEntity(
+                            instrument.figi,
+                            it.value,
+                            it.name,
+                            date.toString()
+                        )
+                    )
+                }
+        } catch (e: Exception) {
+            getApproximatePriceFromApiAt(date, instrument)
+        }
+    }
+
+    private suspend fun getApproximatePriceFromApiAt(
+        date: Date, instrument: Instrument
+    ): Currency = withContext(Dispatchers.IO) {
         api.getCandles(
             instrument.figi,
+            date.minusHour(1).toString(),
             date.toString(),
-            date.nextMinute.toString(),
             "1min"
         ).payload
             .candles
-            .first()
+            .last()
             .c
             .convertTo(instrument.currency)
             .also {
@@ -185,7 +214,7 @@ class PortfolioRepositoryImpl(
     }
 
     private companion object {
-        val START_DATE = Date("2020-01-01T18:29:00.0+03:00")
+        val START_DATE = Date("2020-01-01T18:28:00.0+03:00")
     }
 }
 
