@@ -19,7 +19,10 @@ sealed class InstrumentsGroup(
     object USStockETFs : InstrumentsGroup(
         "US Stock ETFs",
         2,
-        listOf(Instrument.FXUS)
+        listOf(
+            Instrument.FXUS,
+            Instrument.TSPX
+        )
     )
 
     object GoldETFs : InstrumentsGroup(

@@ -18,6 +18,7 @@ val Instrument.image: Int
             Instrument.TECH -> R.drawable.im_tech
             Instrument.TGLD -> R.drawable.im_tgld
             Instrument.TUSD -> R.drawable.im_tusd
+            Instrument.TSPX -> R.drawable.im_tspx
             Instrument.USD -> throw RuntimeException("Unsupported image for this instrument")
         }
     }

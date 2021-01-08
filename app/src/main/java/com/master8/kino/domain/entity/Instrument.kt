@@ -20,6 +20,7 @@ enum class Instrument(
     TECH("Tinkoff NASDAQ","BBG111111111", Type.ETF, Currency.USD),
     TGLD("Tinkoff Gold","BBG222222222", Type.ETF, Currency.USD),
     TUSD("Tinkoff All-Weather Index USD","BBG000000000", Type.ETF, Currency.USD),
+    TSPX("Tinkoff S&P 500","TCS00A102EQ8", Type.ETF, Currency.USD),
 
     USD("USD", "BBG0013HGFT4", Type.CURRENCY, Currency.RUB);
 
