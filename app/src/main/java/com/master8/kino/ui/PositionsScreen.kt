@@ -82,7 +82,7 @@ private fun PortfolioPartBlock(
 ) {
     Column {
         Text(
-            text = "${part.group.name} · ${CURRENCY_FORMATTER.format(part.endTotalPrice.value)}",
+            text = "${part.group.name} · ${CURRENCY_FORMATTER.format(part.endTotalPrice.value)} | ${CURRENCY_FORMATTER.format(part.expectedYield.value)} (${PERCENT_FORMATTER.format(part.expectedYieldInPercent)})",
             fontSize = 12.sp,
             color = Color(0xFF9299A2),
             modifier = Modifier.padding(horizontal = 16.dp)

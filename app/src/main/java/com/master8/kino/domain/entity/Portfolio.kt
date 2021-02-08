@@ -21,4 +21,7 @@ data class PortfolioPart(
     val endTotalPrice: Usd = positions.sumByUsd {
         it.endTotalPrice
     }
+
+    val expectedYield: Usd = endTotalPrice - startTotalPrice
+    val expectedYieldInPercent: Double = (expectedYield / startTotalPrice).value
 }
