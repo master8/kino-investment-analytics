@@ -27,7 +27,7 @@ class GetPortfolioNowUseCase(
 
     private suspend fun buildPosition(instrument: Instrument): PortfolioPosition {
         val operations = repository.getBuyOperations(
-            instrument, repository.getStartDate(), repository.getLastAvailableDate()
+            instrument, repository.getStartDate(instrument), repository.getLastAvailableDate()
         )
 
         val lots = operations.lots

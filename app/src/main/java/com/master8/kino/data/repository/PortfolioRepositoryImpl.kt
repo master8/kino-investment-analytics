@@ -205,7 +205,11 @@ class PortfolioRepositoryImpl(
         }
     }
 
-    override suspend fun getStartDate(): Date {
+    override suspend fun getStartDate(instrument: Instrument): Date {
+        if (instrument == Instrument.FXWO) {//TODO mv8
+            return FXWO_START_DATE
+        }
+
         return START_DATE
     }
 
@@ -215,6 +219,7 @@ class PortfolioRepositoryImpl(
 
     private companion object {
         val START_DATE = Date("2020-01-01T18:28:00.0+03:00")
+        val FXWO_START_DATE = Date("2021-01-01T18:28:00.0+03:00")
     }
 }
 

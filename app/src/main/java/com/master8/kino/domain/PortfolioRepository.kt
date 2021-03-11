@@ -13,6 +13,6 @@ interface PortfolioRepository {
     suspend fun getPriceAt(date: Date, instrument: Instrument): Currency
     suspend fun convertToUsdAt(date: Date, value: Rub): Usd
 
-    suspend fun getStartDate(): Date
+    suspend fun getStartDate(instrument: Instrument): Date
     suspend fun getLastAvailableDate(): Date
 }

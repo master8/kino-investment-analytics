@@ -20,6 +20,7 @@ import com.master8.kino.domain.entity.Usd
 import com.master8.kino.domain.entity.times
 import com.master8.kino.ui.charts.WeightBar
 import com.master8.kino.ui.ext.color
+import kotlin.math.max
 
 @Composable
 fun PortfolioScreen(
@@ -79,7 +80,7 @@ fun PortfolioScreen(
                     drawArc(
                         it.group.color,
                         startAngle + 1,
-                         sweepAngle - 2,
+                        max(sweepAngle - 2, 0f),
                         false,
                         style = Stroke(
                             24.dp.toPx()
