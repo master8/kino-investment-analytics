@@ -13,6 +13,7 @@ val InstrumentsGroup.color: Color
                 InstrumentsGroup.ITStockETFs -> 0xFF84AEF5
                 InstrumentsGroup.AllWeatherIndex -> 0xFF83D4C3
                 InstrumentsGroup.ChinaStockETFs -> 0xFFF08593
+                InstrumentsGroup.GlobalEquityETFs -> 0xFF849EE4
             }
         )
     }
