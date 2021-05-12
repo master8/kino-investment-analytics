@@ -21,5 +21,6 @@ val Instrument.image: Int
             Instrument.TSPX -> R.drawable.im_tspx
             Instrument.USD -> throw RuntimeException("Unsupported image for this instrument")
             Instrument.FXWO -> R.drawable.im_fxwo
+            Instrument.FXDM -> R.drawable.im_fxwo
         }
     }

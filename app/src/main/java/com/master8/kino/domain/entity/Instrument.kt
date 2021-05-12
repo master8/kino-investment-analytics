@@ -12,6 +12,7 @@ enum class Instrument(
     FXIT("FinEx IT Stock ETF OLD","BBG005HLTYH9", Type.ETF, Currency.RUB),
     FXIM("FinEx IT Stock ETF","BBG00Y6D0N45", Type.ETF, Currency.USD),
     FXWO("FinEx Global Equity ETF","BBG00R9805F5", Type.ETF, Currency.RUB),
+    FXDM("FinEx Developed Markrts ETF","TCS0BMDKNM37", Type.ETF, Currency.RUB),
 
     BAC("Bank of America Corp","BBG000BCTLF6", Type.STOCK, Currency.USD),
     PZZA("Papa John's International Inc","BBG000BFWF13", Type.STOCK, Currency.USD),

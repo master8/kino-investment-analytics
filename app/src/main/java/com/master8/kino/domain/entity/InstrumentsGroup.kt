@@ -7,8 +7,10 @@ sealed class InstrumentsGroup(
 ) {
     object Stocks : InstrumentsGroup(
         "Stocks",
-        2,
+        3,
         listOf(
+            Instrument.FXDM,
+            Instrument.FXWO,
             Instrument.AAPL,
             Instrument.ATVI,
             Instrument.BAC,
@@ -57,13 +59,6 @@ sealed class InstrumentsGroup(
         listOf(Instrument.FXCN)
     )
 
-    object GlobalEquityETFs : InstrumentsGroup(
-        "Global Equity ETFs",
-        1,
-
-        listOf(Instrument.FXWO)
-    )
-
     companion object {
         val all = listOf(
             ITStockETFs,
@@ -71,7 +66,6 @@ sealed class InstrumentsGroup(
             Stocks,
             GoldETFs,
             ChinaStockETFs,
-            GlobalEquityETFs,
             AllWeatherIndex
         )
     }
